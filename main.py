@@ -98,11 +98,14 @@ def _parse_and_print():
     if not host_ports_lines:
         logging.fatal(f"No line with '{_PORTS_PREFIX}' found in input file '{NMAP_OUT.value}'")
 
+    logging.debug(f"Found {len(host_ports_lines)} Host/Port lines")
     host_with_ports = _get_hosts_with_ports(host_ports_lines)
 
     if not host_with_ports:
         logging.warning(
             f"No ports found for service substring '{SERVICE_SUBSTR.value}' and input file '{NMAP_OUT.value}'")
+    else:
+        logging.debug(f"Parsed {len(host_with_ports)} Host/Port")
     for line in host_with_ports:
         logging.debug(line)
         # Print to stdout for easy piping.
