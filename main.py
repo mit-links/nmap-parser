@@ -20,7 +20,8 @@ SERVICE_SUBSTR = flags.DEFINE_string("service_substr", default=None, required=Tr
 
 _HOST_PREFIX = "Host:"
 _PORTS_PREFIX = "Ports:"
-_PORTS_REGEX = re.compile("(?P<port>[0-9]+)/(?P<status>[a-z]*)/(?P<protocol>[a-z]*)//(?P<service>[a-z]*)///,?")
+_PORT_INFO_REGEX = re.compile(
+    "(?P<port>[0-9]+)/(?P<status>[a-z]*)/(?P<protocol>[a-z]*)/[^/]*/(?P<service>[a-z]*)/[^/]*/[^/]*/[^/]*,?")
 
 
 def _get_host(host_line: str) -> str:
@@ -30,7 +31,7 @@ def _get_host(host_line: str) -> str:
 def _get_ports_info(ports_line: str) -> list[tuple[int, str, str, str]]:
     ports_info = []
     for part in ports_line.split():
-        matches = re.match(_PORTS_REGEX, part)
+        matches = re.match(_PORT_INFO_REGEX, part)
         if not matches:
             continue
         port = int(matches.groupdict()["port"])
