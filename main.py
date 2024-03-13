@@ -73,32 +73,32 @@ def _build_output(host: str, ports: list[int]) -> list[str]:
 
 def _parse_and_print():
     logging.debug(f"Reading input file '{NMAP_OUT.value}'")
-    host_ports_line = None
+    host_ports_lines = []
     with open(NMAP_OUT.value) as f:
         for line in f.readlines():
-            if _PORTS_PREFIX in line:
-                host_ports_line = line
-                break
-    if not host_ports_line:
+            if _HOST_PREFIX in line and _PORTS_PREFIX in line:
+                host_ports_lines.append(line)
+    if not host_ports_lines:
         logging.fatal(f"No line with '{_PORTS_PREFIX}' found in input file '{NMAP_OUT.value}'")
-    if _HOST_PREFIX not in host_ports_line:
-        logging.fatal(f"Line with '{_PORTS_PREFIX} does not contain '{_HOST_PREFIX}'")
 
-    host = _get_host(host_ports_line)
-    logging.debug(f"Host: {host}")
-    ports_info = _get_ports_info(host_ports_line)
-    logging.debug("All ports info:")
-    for info in ports_info:
-        logging.debug(info)
-    service_map = _build_service_map(ports_info)
-    logging.debug("Service map:")
-    logging.debug(service_map)
-    service_ports = _get_ports_for_service_substr(SERVICE_SUBSTR.value, service_map)
-    host_with_ports = _build_output(host, service_ports)
+    host_with_ports = []
+    for host_ports_line in host_ports_lines:
+        host = _get_host(host_ports_line)
+        logging.debug(f"Host: {host}")
+        ports_info = _get_ports_info(host_ports_line)
+        logging.debug("All ports info:")
+        for info in ports_info:
+            logging.debug(info)
+        service_map = _build_service_map(ports_info)
+        logging.debug("Service map:")
+        logging.debug(service_map)
+        service_ports = _get_ports_for_service_substr(SERVICE_SUBSTR.value, service_map)
+        host_with_ports.extend(_build_output(host, service_ports))
+
     if not host_with_ports:
         logging.warning(
             f"No ports found for service substring '{SERVICE_SUBSTR.value}' and input file '{NMAP_OUT.value}'")
-    for line in host_with_ports:
+    for line in sorted(host_with_ports):
         logging.debug(line)
         # Print to stdout for easy piping.
         print(line)
