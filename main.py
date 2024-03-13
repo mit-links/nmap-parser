@@ -18,10 +18,12 @@ NMAP_OUT = flags.DEFINE_string("nmap_out", default=None, required="True",
 SERVICE_SUBSTR = flags.DEFINE_string("service_substr", default=None, required=True,
                                      help="The substring of the service to filter for. Example: 'http'")
 
-_HOST_PREFIX = "Host:"
-_PORTS_PREFIX = "Ports:"
+_HOST_PREFIX = "Host: "
+_PORTS_PREFIX = "Ports: "
+_FIELD_SEPARATOR = "\t"
+_PORT_INFO_SEPARATOR = ", "
 _PORT_INFO_REGEX = re.compile(
-    "(?P<port>[0-9]+)/(?P<status>[^/]*)/(?P<protocol>[^/]*)/[^/]*/(?P<service>[^/]*)/[^/]*/[^/]*/[^/]*,?")
+    "(?P<port>[0-9]+)/(?P<state>[^/]*)/(?P<protocol>[^/]*)/(?P<owner>[^/]*)/(?P<service>[^/]*)/(?P<sun_rpc_info>[^/]*)/(?P<version_info>[^/]*)/[^/]*,?")
 
 
 def _get_host(host_line: str) -> str:
@@ -30,15 +32,18 @@ def _get_host(host_line: str) -> str:
 
 def _get_ports_info(ports_line: str) -> list[tuple[int, str, str, str]]:
     ports_info = []
-    for part in ports_line.split():
-        matches = re.match(_PORT_INFO_REGEX, part)
-        if not matches:
+    for part in ports_line.split(_FIELD_SEPARATOR):
+        if not part.startswith(_PORTS_PREFIX):
             continue
-        port = int(matches.groupdict()["port"])
-        status = matches.groupdict()["status"]
-        protocol = matches.groupdict()["protocol"]
-        service = matches.groupdict()["service"]
-        ports_info.append((port, status, protocol, service))
+        for port_info in part.strip(_PORTS_PREFIX).split(_PORT_INFO_SEPARATOR):
+            matches = re.match(_PORT_INFO_REGEX, port_info)
+            if not matches:
+                continue
+            port = int(matches.groupdict()["port"])
+            state = matches.groupdict()["state"]
+            protocol = matches.groupdict()["protocol"]
+            service = matches.groupdict()["service"]
+            ports_info.append((port, state, protocol, service))
     return ports_info
 
 
