@@ -67,7 +67,7 @@ def _build_output(host: str, ports: list[int]) -> list[str]:
 
 
 def _parse_and_print():
-    logging.debug(f"Reading input file: {NMAP_OUT.value}")
+    logging.debug(f"Reading input file '{NMAP_OUT.value}'")
     host_ports_line = None
     with open(NMAP_OUT.value) as f:
         for line in f.readlines():
@@ -75,7 +75,7 @@ def _parse_and_print():
                 host_ports_line = line
                 break
     if not host_ports_line:
-        logging.fatal(f"No line with '{_PORTS_PREFIX}' found in input file: {NMAP_OUT.value}")
+        logging.fatal(f"No line with '{_PORTS_PREFIX}' found in input file '{NMAP_OUT.value}'")
     if _HOST_PREFIX not in host_ports_line:
         logging.fatal(f"Line with '{_PORTS_PREFIX} does not contain '{_HOST_PREFIX}'")
 
@@ -90,6 +90,9 @@ def _parse_and_print():
     logging.debug(service_map)
     service_ports = _get_ports_for_service_substr(SERVICE_SUBSTR.value, service_map)
     host_with_ports = _build_output(host, service_ports)
+    if not host_with_ports:
+        logging.warning(
+            f"No ports found for service substring '{SERVICE_SUBSTR.value}' and input file '{NMAP_OUT.value}'")
     for line in host_with_ports:
         logging.debug(line)
         # Print to stdout for easy piping.
