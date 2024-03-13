@@ -1,10 +1,10 @@
 """Parse the greppable output of Nmap (from -oG) for a service into lines formatted as `host:port` and print the result.
 
 Example:
-    python3 main.py --nmap_out=/tmp/nmap-out.gnmap --service_substr=http
+    python main.py --nmap_out=/tmp/nmap-out.gnmap --service_substr=http
 
 Example with debug logs:
-    python3 main.py --nmap_out=/tmp/nmap-out.gnmap --service_substr=http --v=1
+    python main.py --nmap_out=/tmp/nmap-out.gnmap --service_substr=http --v=1
 """
 
 import re

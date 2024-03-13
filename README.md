@@ -6,13 +6,13 @@ that can be easily piped into a downstream utility.
 Basic example:
 
 ```
-python3 main.py --nmap_out=/tmp/nmap-out.gnmap --service_substr=http`
+python main.py --nmap_out=/tmp/nmap-out.gnmap --service_substr=http`
 ```
 
 Example with debug logs:
 
 ```
-python3 main.py --nmap_out=/tmp/nmap-out.gnmap --service_substr=http --v=1
+python main.py --nmap_out=/tmp/nmap-out.gnmap --service_substr=http --v=1
 ```
 
 Dependencies:
