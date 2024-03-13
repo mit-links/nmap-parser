@@ -21,7 +21,7 @@ SERVICE_SUBSTR = flags.DEFINE_string("service_substr", default=None, required=Tr
 _HOST_PREFIX = "Host:"
 _PORTS_PREFIX = "Ports:"
 _PORT_INFO_REGEX = re.compile(
-    "(?P<port>[0-9]+)/(?P<status>[a-z]*)/(?P<protocol>[a-z]*)/[^/]*/(?P<service>[a-z]*)/[^/]*/[^/]*/[^/]*,?")
+    "(?P<port>[0-9]+)/(?P<status>[^/]*)/(?P<protocol>[^/]*)/[^/]*/(?P<service>[^/]*)/[^/]*/[^/]*/[^/]*,?")
 
 
 def _get_host(host_line: str) -> str:
