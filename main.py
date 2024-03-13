@@ -98,7 +98,7 @@ def _parse_and_print():
     if not host_with_ports:
         logging.warning(
             f"No ports found for service substring '{SERVICE_SUBSTR.value}' and input file '{NMAP_OUT.value}'")
-    for line in sorted(host_with_ports):
+    for line in host_with_ports:
         logging.debug(line)
         # Print to stdout for easy piping.
         print(line)
