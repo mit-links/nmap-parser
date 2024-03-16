@@ -14,9 +14,9 @@ from absl import logging
 from absl import flags
 
 NMAP_OUT = flags.DEFINE_string("nmap_out", default=None, required="True",
-                               help="The path to the file output when running nmap with '-oG'.")
+                               help="The path to the file output when running nmap with '-oG'. Required.")
 SERVICE_SUBSTR = flags.DEFINE_string("service_substr", default=None, required=True,
-                                     help="The substring of the service to filter for. Example: 'http'")
+                                     help="The substring of the service to filter for. Example: 'http'. Required.")
 
 _HOST_PREFIX = "Host: "
 _PORTS_PREFIX = "Ports: "
